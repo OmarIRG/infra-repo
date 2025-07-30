@@ -1,42 +1,39 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app
+  name: todo-app
   labels:
-    app: app                     # ليبل رئيسى بسيط
+    app: todo-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: app
+      app: todo-app
   template:
     metadata:
       labels:
-        app: app
+        app: todo-app
+        com.fortstak.updatable: "true"
     spec:
-      # 🔑 1) سرّ السحب من ECR
       imagePullSecrets:
-        - name: ecr-creds        # لازم يكون secret جاهز بالاسم ده
-
+        - name: ecr-creds           # احذف السطر لو الصورة public
       containers:
-        - name: app
-          # 🔑 2) الصورة الخاصة فى ECR
+        - name: todo-app
           image: 484614878230.dkr.ecr.us-east-1.amazonaws.com/todo-nodejs-app:latest
-          
-          # 🔑 3) متغيّرات البيئة اللى التطبيق محتاجها
           env:
-            - name: mongoDbUrl
-              value: mongodb://mongo:27017/todo?authSource=admin   # عدّلها لو عندك باسورد
-
+            - name: MONGO_DB_URL
+              value: mongodb://mongo:27017/todo   # ← بدون user/pass ولا ?authSource
           ports:
             - containerPort: 4000
-
-          # (اختيارى) فحص الحاوية كل 30 ثانية
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 4000
+            initialDelaySeconds: 5
+            periodSeconds: 10
           livenessProbe:
-            exec:
-              command: ["wget", "-qO-", "http://localhost:4000/health"]
+            httpGet:
+              path: /health
+              port: 4000
             initialDelaySeconds: 10
             periodSeconds: 30
-            timeoutSeconds: 5
-
-      restartPolicy: Always

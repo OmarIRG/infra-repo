@@ -1,34 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    kompose.cmd: kompose convert -o k8s/
-    kompose.version: 1.33.0 (3ce457399)
-  labels:
-    io.kompose.service: watchtower
   name: watchtower
+  labels:
+    app: watchtower
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: watchtower
-  strategy:
-    type: Recreate
+      app: watchtower
   template:
     metadata:
-      annotations:
-        kompose.cmd: kompose convert -o k8s/
-        kompose.version: 1.33.0 (3ce457399)
       labels:
-        io.kompose.network/compose-todo: "true"
-        io.kompose.service: watchtower
+        app: watchtower
     spec:
       containers:
-        - args:
+        - name: watchtower
+          image: containrrr/watchtower
+          args:
             - --interval
             - "30"
             - --filter-label
             - com.fortstak.updatable
-          image: containrrr/watchtower
-          name: watchtower
-      restartPolicy: Always
