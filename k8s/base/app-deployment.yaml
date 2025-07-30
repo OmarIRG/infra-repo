@@ -1,46 +1,42 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    com.fortstak.updatable: "true"
-    kompose.cmd: kompose convert -o k8s/
-    kompose.version: 1.33.0 (3ce457399)
-  labels:
-    io.kompose.service: app
   name: app
+  labels:
+    app: app                     # ليبل رئيسى بسيط
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: app
+      app: app
   template:
     metadata:
-      annotations:
-        com.fortstak.updatable: "true"
-        kompose.cmd: kompose convert -o k8s/
-        kompose.version: 1.33.0 (3ce457399)
       labels:
-        io.kompose.network/compose-todo: "true"
-        io.kompose.service: app
+        app: app
     spec:
+      # 🔑 1) سرّ السحب من ECR
+      imagePullSecrets:
+        - name: ecr-creds        # لازم يكون secret جاهز بالاسم ده
+
       containers:
-        - env:
-            - name: mongoDbUrl
-              value: mongodb://:@mongo:27017/todo?authSource=admin
+        - name: app
+          # 🔑 2) الصورة الخاصة فى ECR
           image: 484614878230.dkr.ecr.us-east-1.amazonaws.com/todo-nodejs-app:latest
+          
+          # 🔑 3) متغيّرات البيئة اللى التطبيق محتاجها
+          env:
+            - name: mongoDbUrl
+              value: mongodb://mongo:27017/todo?authSource=admin   # عدّلها لو عندك باسورد
+
+          ports:
+            - containerPort: 4000
+
+          # (اختيارى) فحص الحاوية كل 30 ثانية
           livenessProbe:
             exec:
-              command:
-                - wget
-                - -qO-
-                - http://localhost:4000/health
-            failureThreshold: 3
+              command: ["wget", "-qO-", "http://localhost:4000/health"]
             initialDelaySeconds: 10
             periodSeconds: 30
             timeoutSeconds: 5
-          name: app
-          ports:
-            - containerPort: 4000
-              hostPort: 4000
-              protocol: TCP
+
       restartPolicy: Always
