@@ -10,7 +10,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/OmarIRG/infra-repo.git
-    targetRevision: master
+    targetRevision: main
     path: k8s/base
   syncPolicy:
     automated:
