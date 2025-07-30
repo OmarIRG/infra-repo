@@ -5,4 +5,4 @@ resources:
   - app-service.yaml
   - mongo-deployment.yaml
   - mongo-service.yaml
-  - watchtower-deployment.yaml
+
