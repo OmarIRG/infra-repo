@@ -19,7 +19,7 @@ spec:
           image: mongo:6
           env:
             - name: MONGO_INITDB_DATABASE
-              value: todo            # ← فقط اسم الداتابيز
+              value: todo            # لا متغيرات USER/PASS
           ports:
             - containerPort: 27017
           livenessProbe:
