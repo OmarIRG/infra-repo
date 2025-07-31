@@ -1,0 +1,17 @@
+# ansible/playbooks/k3s.yml
+---
+- hosts: k3s_server
+  become: true          # يفعّل sudo للـ Play نفسه
+  vars:
+    k3s_become: true    # ← أهم سطر: يمرّره للرول
+
+  roles:
+    - role: xanmanning.k3s
+      tags: k3s
+
+  post_tasks:
+    - name: Fetch kubeconfig محلياً
+      fetch:
+        src: /etc/rancher/k3s/k3s.yaml
+        dest: ~/.kube/config
+        flat: yes

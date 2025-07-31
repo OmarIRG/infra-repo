@@ -1,0 +1,12 @@
+---
+- hosts: all
+  become: true
+  tasks:
+    - name: Update apt cache & upgrade
+      apt: update_cache=yes upgrade=dist
+      tags: base
+
+    - name: Install Docker & deps
+      include_role:
+        name: geerlingguy.docker
+      tags: docker

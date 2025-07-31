@@ -1,0 +1,4 @@
+# requirements.yml
+roles:
+  - name: xanmanning.k3s      
+    version: v3.5.0

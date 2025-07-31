@@ -1,0 +1,21 @@
+---
+- hosts: k3s_server
+  become: true
+
+  vars:
+    k8s_conf: /etc/rancher/k3s/k3s.yaml   # مسار ثابت
+
+  tasks:
+    - name: Create argocd namespace
+      kubernetes.core.k8s:
+        kubeconfig: "{{ k8s_conf }}"      # ← المهم
+        api_version: v1
+        kind: Namespace
+        name: argocd
+
+    - name: Install Argo CD
+      ansible.builtin.shell: |
+        kubectl --kubeconfig {{ k8s_conf }} apply -n argocd \
+          -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+      args:
+        executable: /bin/bash

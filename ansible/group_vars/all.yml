@@ -1,0 +1,13 @@
+ansible_user: ubuntu
+ansible_ssh_private_key_file: ~/.ssh/todo-key.pem
+k3s_become: true
+# Configurations
+k3s_state: installed          
+k3s_control_node: true
+k3s_server:
+  tls-san:
+    - "13.222.130.30"
+  write-kubeconfig-mode: "644"
+  disable:
+    - "traefik"              
+k3s_registration_address: "13.222.130.30"
