@@ -15,15 +15,15 @@ spec:
         app: todo-app
         com.fortstak.updatable: "true"
     spec:
-      # احذف bloc-imagePullSecrets كله إذا كنت تدفع الصورة إلى ريجسترى عام
+      
       imagePullSecrets:
         - name: ecr-pull
       containers:
         - name: todo-app
           image: 484614878230.dkr.ecr.us-east-1.amazonaws.com/todo-nodejs-app:latest
           env:
-            - name: mongoDbUrl          # نفس الاسم الذى يقرأه الكود
-              value: mongodb://mongo:27017/todo   # ← لا user/pass ولا authSource
+            - name: mongoDbUrl         
+              value: mongodb://mongo:27017/todo   
           ports:
             - containerPort: 4000
           readinessProbe:
