@@ -6,8 +6,8 @@ k3s_state: installed
 k3s_control_node: true
 k3s_server:
   tls-san:
-    - "13.222.130.30"
+    - "3.91.154.138"
   write-kubeconfig-mode: "644"
   disable:
     - "traefik"              
-k3s_registration_address: "13.222.130.30"
+k3s_registration_address: "3.91.154.138"

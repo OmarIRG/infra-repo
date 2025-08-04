@@ -1,9 +1,9 @@
 # ansible/playbooks/k3s.yml
 ---
 - hosts: k3s_server
-  become: true          # يفعّل sudo للـ Play نفسه
+  become: true          
   vars:
-    k3s_become: true    # ← أهم سطر: يمرّره للرول
+    k3s_become: true   
 
   roles:
     - role: xanmanning.k3s
